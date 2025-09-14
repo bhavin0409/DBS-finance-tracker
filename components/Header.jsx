@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -13,7 +13,7 @@ const Header = () => {
                     <Image src={"/logo.png"} alt='Welth' height={60} width={200} className='h-12 w-auto object-contain' />
                 </Link>
 
-                <div className='flex items-center space-x-4'>
+                <div className='flex items-center space-x-8'>
                     <SignedIn>
                         <Link href={"/dashboard"} className='text-gray-600 hover:text-blue-800 flex items-center gap-2'>
                             <Button variant={"outline"}>
@@ -29,16 +29,21 @@ const Header = () => {
                             </Button>
                         </Link>
                     </SignedIn>
+
                     <SignedOut>
                         <SignInButton forceRedirectUrl='/dashboard'>
                             <Button variant={"outline"}>Login</Button>
                         </SignInButton>
                     </SignedOut>
+                    
                     <SignedIn>
                         <UserButton appearance={{
-                            elements: { avatarBox: "w-12 h-12" }, layout: { UserButton: "w-12 h-12" }
-                        }} />
+                            elements: {
+                                userButtonAvatarBox: 'w-10 h-10',
+                            }
+                        }}/>
                     </SignedIn>
+                    
                 </div>
             </nav>
         </div>

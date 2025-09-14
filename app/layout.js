@@ -15,16 +15,16 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${inter.className}`}
+          className={`${inter.className} `}
           suppressHydrationWarning={true}
         >
           <Header />
           <main className="h-screen mx-auto py-5">
             {children}
           </main>
-          <footer>
+          {/* <footer className="absolute bottom-0 w-full">
             <p>© 2025 Welth. All rights reserved.</p>
-          </footer>
+          </footer> */}
         </body>
       </html>
     </ClerkProvider>
