@@ -32,9 +32,7 @@ Welth is a modern, one-stop finance platform built with [Next.js](https://nextjs
    yarn
    # or
    pnpm install
-   # or
-   bun install
-   ```
+ 
 
 3. Set up environment variables:
 
