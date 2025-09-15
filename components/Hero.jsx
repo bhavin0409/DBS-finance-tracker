@@ -19,13 +19,13 @@ const Hero = () => {
                     </Link>
 
                     <Link href={"/dashboard"}>
-                        <Button size={"lg"} variant={"outline"} className={"px-8"}> dummy </Button>
+                        <Button size={"lg"} variant={"outline"} className={"px-8"}> Demo Video </Button>
                     </Link>
                 </div>
 
-                <div className="mt-16">
+                {/* <div className="mt-16">
                     <Image src={'/banner.jpeg'} alt="Banner Image" width={1280} height={720} priority className="rounded-lg shadow-2xl border mx-auto"/>
-                </div>
+                </div> */}
             </div>
         </div>
     )
