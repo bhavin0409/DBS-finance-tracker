@@ -20,7 +20,7 @@ export default function Footer() {
                         <h3 className="text-lg font-semibold text-black mb-3">Quick Links</h3>
                         <ul className="space-y-2 text-sm">
                             <li><Link href="/dashboard" className="hover:text-gray-700">Dashboard</Link></li>
-                            <li><Link href="/transactions" className="hover:text-gray-700">Transactions</Link></li>
+                            <li><Link href="/transactions/create" className="hover:text-gray-700">Add Transactions</Link></li>
                         </ul>
                     </div>
 
