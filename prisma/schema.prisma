@@ -11,14 +11,15 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl  = env("DIRECT_URL")
+  directUrl= env("DIRECT_URL")
 }
+
 
 model User {
   id          String        @id @default(uuid())
   clerkUserId String        @unique //clark user id
-  email       String        @unique //clark email
-  name        String? //name from clerk
+  email       String        @unique 
+  name        String? 
   imageUrl    String?
   tranactions Transaction[]
   accouts     Account[]
@@ -61,9 +62,8 @@ model Transaction {
   isRecurring       Boolean            @default(false)
   recurringInterval RecurringInterval? //only used if isRecurring is true
   nextRecurringDate DateTime? //next date for Recurring Transaction
-  lastRecurringDate DateTime? //last date for Recurring Transaction
   lastProcessed     DateTime? //last date when recurring transaction was processed
-  status            TransactionStatus  @default(completed)
+  status            TransactionStatus  @default(COMPLETED)
   userId            String
   user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   accountId         String
@@ -89,9 +89,9 @@ enum RecurringInterval {
 }
 
 enum TransactionStatus {
-  pending
-  completed
-  failed
+  PENDING
+  COMPLETED
+  FAILED
 }
 
 model Budget {
