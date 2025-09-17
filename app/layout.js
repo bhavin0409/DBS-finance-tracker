@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body
           className={`${inter.className} `}
-          suppressHydrationWarning={true}
+          
         >
           <Header />
           <main className="h-screen mx-auto py-5">
