@@ -1,6 +1,6 @@
 import { featuresData } from '@/data/landing'
 import React from 'react'
-import { Card, CardContent } from './ui/card'
+import { Card, CardContent } from '../ui/card'
 
 const Feature = () => {
     return (
