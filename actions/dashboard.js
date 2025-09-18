@@ -4,7 +4,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { db } from "../lib/prisma";
-import { count } from "console";
 
 const serializeTransaction = (Obj) => {
     const serialize = {...Obj};
@@ -94,5 +93,6 @@ export async function getUserAccounts() {
          },
         });
     const serializeAccount = serializeTransaction(account);
+    return serializeAccount;
     
 }
