@@ -1,27 +1,31 @@
 "use server";
 
+
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { db } from "../lib/prisma";
+import { count } from "console";
 
 const serializeTransaction = (Obj) => {
-    const serializeObj = {...Obj};
+    const serialize = {...Obj};
 
     if (Obj.balance) {
-        serializeObj.balance = Obj.balance.toNumber();
+        serialize.balance = Obj.balance.toNumber();
+    }
+    if (Obj.amount) {
+        serialize.amount = Obj.amount.toNumber();
     }
 }
 
 export async function createAccount(data) {
     try {
-        const userId = await auth()
-
-        if (!userId) {
-            throw new Error("User not aunthenticated");
-        }
+        const {userId} = await auth()
+        if (!userId) throw new Error("unauthorized");
+        
 
         const user = await db.user.findUnique({
             where: { clerkUserId : userId },
-        })
+        });
 
         if (!user) {
             throw new Error("User not found");
@@ -60,11 +64,35 @@ export async function createAccount(data) {
         })
 
         const serializeAccount = serializeTransaction(account);
-
         revalidatePath("/dashboard");
-
         return { success: true, data: serializeAccount };
     } catch (error) {
         throw new Error(error.message);
     }
+}
+export async function getUserAccounts() {
+    const {userId} = await auth()
+        if (!userId) throw new Error("unauthorized");
+        
+
+        const user = await db.user.findUnique({
+            where: { clerkUserId : userId },
+        });
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+        const accounts = await db.account.findMany({
+            where: {userId : user.id},
+            orderBy: { createdAt: 'desc' },
+            include: { 
+                _count:{
+                select:{
+                    transactions:true
+                },
+            },
+         },
+        });
+    const serializeAccount = serializeTransaction(account);
+    
 }

@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/landingPageComponent/Header";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
           <main className="h-screen mx-auto py-5">
             {children}
           </main>
+          <Toaster richColors/>
           {/* <footer className="absolute bottom-0 w-full">
             <p>© 2025 Welth. All rights reserved.</p>
           </footer> */}
