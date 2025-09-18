@@ -91,7 +91,7 @@ export async function getUserAccounts() {
                     transactions:true
                 },
             },
-         },
+        },
         });
     const serializeAccount = serializeTransaction(account);
     
