@@ -1,4 +1,4 @@
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { ArrowDownRight, ArrowUpRight, IndianRupee } from 'lucide-react';
 import Link from 'next/link';
@@ -14,14 +14,15 @@ const AccountCard = ({ account }) => {
                     <Switch  checked={isDefault}/>
                 </CardHeader>
                 <CardContent>
-                    <div className='text-2xl font-bold'>
-                        <IndianRupee />{parseFloat(balance).toFixed(2)}
+                    <div className='text-2xl font-bold flex flex-row '>
+                        <IndianRupee className='mt-1 mb-1.5'/>
+                        <p>{parseFloat(balance).toFixed(2)}</p>
                     </div>
                     <p className='text-sm text-muted-foreground'>
-                        {type.charAt(0) + type.charAt(1).toLowerCase()} Account
+                        {type.charAt(0) + type.slice(1).toLowerCase()} Account
                     </p>
                 </CardContent>
-                <CardFooter className="flex justify-between text-sm text-muted-foreground ">
+                <CardFooter className="flex justify-between text-sm text-muted-foreground mt-2">
                     <div className='flex items-center'>
                         <ArrowUpRight className='h-4 w-4 mr-2 text-green-500' />
                         Income
