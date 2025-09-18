@@ -13,7 +13,7 @@ const serializeTransaction = (Obj) => {
 
 export async function createAccount(data) {
     try {
-        const userId = await auth()
+        const { userId } = await auth()
 
         if (!userId) {
             throw new Error("User not aunthenticated");
