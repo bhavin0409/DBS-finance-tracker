@@ -3,7 +3,6 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { success } from "zod";
 
 
 const serializeTransaction = (Obj) => {
@@ -23,7 +22,7 @@ export async function updateDefaultAccount(accountId) {
     try {
         const { userId } = await auth();
 
-        if (!userId) throw new Error("unauthorized");
+        if (!userId) throw new Error("Unauthorized");
 
         const user = await db.user.findUnique({
             where: { clerkUserId : userId }

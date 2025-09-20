@@ -21,7 +21,7 @@ const serializeTransaction = (Obj) => {
 export async function createAccount(data) {
     try {
         const {userId} = await auth()
-        if (!userId) throw new Error("unauthorized");
+        if (!userId) throw new Error("Unauthorized");
         
 
         const user = await db.user.findUnique({
