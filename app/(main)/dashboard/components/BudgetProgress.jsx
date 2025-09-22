@@ -50,7 +50,7 @@ const BudgetProgress = ({ initialBudget, currentExpenses }) => {
         setIsEditing(false);
     }
 
-    const precentUsed = initialBudget ?
+    const percentUsed = initialBudget ?
         (currentExpenses / initialBudget) * 100
         : 0;
     return (
@@ -108,17 +108,17 @@ const BudgetProgress = ({ initialBudget, currentExpenses }) => {
                 {initialBudget && (
                     <div className='space-y-2'>
                         <Progress 
-                            value={precentUsed}
+                            value={percentUsed}
                             extraStyles={`
-                                ${precentUsed >= 90 
+                                ${percentUsed >= 90 
                                 ? "bg-red-500" 
-                                : precentUsed >= 75 
+                                : percentUsed >= 75 
                                 ? "bg-yellow-500" 
                                 : "bg-green-500"}`
                             }
                         />
                         <p className='text-sm text-muted-foreground text-right'>
-                            {precentUsed.toFixed(2)}% used
+                            {percentUsed.toFixed(2)}% used
                         </p>
                     </div>
                 )}

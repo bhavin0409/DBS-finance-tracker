@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 
 
 const serializeTransaction = (Obj) => {
-    const serialize = {...Obj};
+    const serialize = { ...Obj };
 
     if (Obj.balance) {
         serialize.balance = Obj.balance.toNumber();
@@ -25,28 +25,68 @@ export async function updateDefaultAccount(accountId) {
         if (!userId) throw new Error("Unauthorized");
 
         const user = await db.user.findUnique({
-            where: { clerkUserId : userId }
+            where: { clerkUserId: userId }
         });
 
-        if(!user) throw new Error("User Not Found");
+        if (!user) throw new Error("User Not Found");
 
         //// if account is set to default, unset all other accounts for this user
         await db.account.updateMany({
-            where: { userId : user.id , isDefault: true},
-            data: { isDefault: false}
+            where: { userId: user.id, isDefault: true },
+            data: { isDefault: false }
         });
 
         const account = await db.account.update({
-            where: { id : accountId , userId: user.id},
-            data: {isDefault: true}
+            where: { id: accountId, userId: user.id },
+            data: { isDefault: true }
         });
 
         revalidatePath("/dashboard");
 
-        return {success: true, data: serializeTransaction(account)};
-        
+        return { success: true, data: serializeTransaction(account) };
+
     } catch (error) {
-        return {success: false, data: error.message};
+        return { success: false, data: error.message };
+    }
+}
+
+export async function getAccountWithTransactions(accountId) {
+    const { userId } = await auth();
+
+    if (!userId) throw new Error("Unauthorized")
+
+    const user = await db.user.findUnique({
+        where: { clerkUserId: userId }
+    })
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const account = await db.account.findUnique({
+        where: {
+            id: accountId,
+            userId: user.id,
+        },
+        include: {
+            transactions: {
+                where: {
+                    userId: user.id,
+                    accountId: accountId
+                },
+                orderBy: { date: "desc" },
+            },
+            _count: {
+                select: { transactions: true },
+            },
+        },
+    });
+
+    if (!account) return null;
+
+    return {
+        ...serializeTransaction(account),
+        transactions: account.transactions.map(serializeTransaction)
     }
 }
 export async function getAccountWithTransactions(accountId) {

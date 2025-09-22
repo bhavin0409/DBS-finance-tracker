@@ -32,7 +32,7 @@ export async function getCurrentBudget(accountId) {
             0
         );
 
-        const exprenses = await db.transaction.aggregate({
+        const expenses = await db.transaction.aggregate({
             where: {
                 userId: user.id,
                 type: 'EXPENSE',
@@ -49,7 +49,7 @@ export async function getCurrentBudget(accountId) {
 
         return {
             budget: budget ? budget.amount.toNumber() : null,
-            currentExpenses: exprenses._sum.amount ? exprenses._sum.amount.toNumber() : 0,
+            currentExpenses: expenses._sum.amount ? expenses._sum.amount.toNumber() : 0,
         }
     } catch (error) {
         console.log("Error fetching budget: ",error.message);
