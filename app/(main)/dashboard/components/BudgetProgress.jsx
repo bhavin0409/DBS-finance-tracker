@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { updateBudget } from '@/actions/budget';
 import { Button } from '@/components/ui/button';
@@ -101,7 +101,7 @@ const BudgetProgress = ({ initialBudget, currentExpenses }) => {
                                     className="h-6 w-6 "
                                 > <Pencil className='w-4 h-4' /> </Button>
                             </>
-                            )};
+                            )}
                     </div>
                 </div>
             </CardHeader>
