@@ -56,10 +56,7 @@ const AccountCard = ({ account }) => {
                     />
                 </CardHeader>
                 <CardContent>
-                    <div className='text-2xl font-bold flex flex-row '>
-                        <IndianRupee className='mt-1 mb-1.5' />
-                        <p>{parseFloat(balance).toFixed(2)}</p>
-                    </div>
+                    <p>₹{parseFloat(balance).toFixed(2)}</p>
                     <p className='text-sm text-muted-foreground'>
                         {type.charAt(0) + type.slice(1).toLowerCase()} Account
                     </p>

@@ -23,9 +23,7 @@ export default function RootLayout({ children }) {
             {children}
           </main>
           <Toaster richColors/>
-          {/* <footer className="absolute bottom-0 w-full">
-            <p>© 2025 Welth. All rights reserved.</p>
-          </footer> */}
+          
         </body>
       </html>
     </ClerkProvider>
