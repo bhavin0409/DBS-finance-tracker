@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import ReceiptScanner from './ReceiptScanner';
 
 const AddTransationForm = ({ accounts, categories }) => {
     const router = useRouter()
@@ -30,6 +31,7 @@ const AddTransationForm = ({ accounts, categories }) => {
             accountId: accounts.find((acc) => acc.isDefault)?.id,
             date: new Date(),
             isRecurring: false,
+            category: ""
         }
     })
 
@@ -42,16 +44,13 @@ const AddTransationForm = ({ accounts, categories }) => {
     const type = watch("type")
     const isRecurring = watch("isRecurring")
     const date = watch("date")
+    const category = watch("category")
 
     const onSubmit = async (data) => {
-        const formData= {
+        const formData = {
             ...data,
             amount: parseFloat(data.amount)
         }
-
-        console.log('====================================');
-        console.log(formData);
-        console.log('====================================');
 
         transactionFn(formData);
     }
@@ -62,21 +61,39 @@ const AddTransationForm = ({ accounts, categories }) => {
             reset();
             router.push(`/account/${transactionResult.data.accountId}`)
         }
-    } , [transactionResult , transactionLoading])
+    }, [transactionResult, transactionLoading])
 
     const filteredCategories = categories.filter(
         (category) => category.type === type
     );
 
+    const handleScanComplete = (scanData) => {
+        console.log('====================================');
+        console.log(scanData);
+        console.log('====================================');
+        if (scanData) {
+            setValue("amount", scanData.amount.toString())
+            setValue("date", new Date(scanData.date))
+            if (scanData.description) {
+                setValue("description", scanData.description)
+            }
+            if (scanData.category) {
+                setValue("category", scanData.category)
+            }
+        }
+    }
+
     return (
         <form className='space-y-6 pb-20' onSubmit={handleSubmit(onSubmit)}>
             {/* AI Reciept Scanner */}
+            <ReceiptScanner onScanComplete={handleScanComplete} />
 
             <div className='space-y-2'>
                 <label className='text-sm font-medium'>Type</label>
                 <Select
                     onValueChange={(value) => setValue("type", value)}
                     defaultValue={type}
+                    value={type}
                 >
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select type" />
@@ -109,6 +126,7 @@ const AddTransationForm = ({ accounts, categories }) => {
                     <Select
                         onValueChange={(value) => setValue("accountId", value)}
                         defaultValue={getValues("accountId")}
+                        value={getValues("accountId")}
                     >
                         <SelectTrigger className='w-full'>
                             <SelectValue placeholder="Select Account" />
@@ -135,14 +153,17 @@ const AddTransationForm = ({ accounts, categories }) => {
                 <Select
                     onValueChange={(value) => setValue("category", value)}
                     defaultValue={getValues("category")}
+                    value={category}
                 >
                     <SelectTrigger className='w-full'>
                         <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
                     <SelectContent>
                         {filteredCategories.map((category) => (
-                            <SelectItem key={category.id} value={category.id}>     {category.name}</SelectItem>
-                        ))};
+                            <SelectItem key={category.id} value={category.id}>
+                                {category.name}
+                            </SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
 
@@ -205,6 +226,7 @@ const AddTransationForm = ({ accounts, categories }) => {
                     <Select
                         onValueChange={(value) => setValue("recurringInterval", value)}
                         defaultValue={getValues("recurringInterval")}
+                        value={getValues("recurringInterval")}
                     >
                         <SelectTrigger className='w-full'>
                             <SelectValue placeholder="Select Interval" />
@@ -229,7 +251,7 @@ const AddTransationForm = ({ accounts, categories }) => {
                 >Create Transation</Button>
                 <Button
                     type="button"
-                    onClick = {() => router.back()}
+                    onClick={() => router.back()}
                     variant="outline"
                     className='w-full'
                 >Cancel</Button>
