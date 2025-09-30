@@ -181,10 +181,15 @@ export function TransactionTable({ transactions }) {
 
   useEffect(() => {
     if (deleted && !deleteLoading) {
-      toast.error("Transactions deleted successfully");
-      router.refresh();
+      if (deleted.success) {
+        toast.success("Transactions deleted successfully");
+        setSelectedIds([]); // Clear selection on success
+        router.refresh();
+      } else if (deleted.error) {
+        toast.error(deleted.error);
+      }
     }
-  }, [deleted, deleteLoading]);
+  }, [deleted, deleteLoading, router]);
 
   const handleClearFilters = () => {
     setSearchTerm("");
@@ -439,9 +444,8 @@ export function TransactionTable({ transactions }) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           className="text-destructive"
-                          onClick={async () => {
-                            await deleteFn([transaction.id]);
-                            router.refresh();
+                          onClick={() => {
+                            deleteFn([transaction.id]);
                           }}
                         >
                           Delete

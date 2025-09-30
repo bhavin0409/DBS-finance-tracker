@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
@@ -69,11 +70,12 @@ export async function bulkDeleteTransactions(transactionIds) {
 
     // Group transactions by account to update balances
     const accountBalanceChanges = transactions.reduce((acc, transaction) => {
-      const change =
-        transaction.type === "EXPENSE"
-          ? transaction.amount
-          : -transaction.amount;
-      acc[transaction.accountId] = (acc[transaction.accountId] || 0) + change;
+      const change = transaction.type === "EXPENSE" ? transaction.amount.negated() : transaction.amount;
+
+      if (!acc[transaction.accountId]) {
+        acc[transaction.accountId] = new Prisma.Decimal(0);
+      }
+      acc[transaction.accountId] = acc[transaction.accountId].plus(change);
       return acc;
     }, {});
 
@@ -95,7 +97,7 @@ export async function bulkDeleteTransactions(transactionIds) {
           where: { id: accountId },
           data: {
             balance: {
-              increment: balanceChange,
+              decrement: balanceChange,
             },
           },
         });
@@ -143,7 +145,7 @@ export async function updateDefaultAccount(accountId) {
     });
 
     revalidatePath("/dashboard");
-    return { success: true, data: serializeTransaction(account) };
+    return { success: true, data: serializeDecimal(account) };
   } catch (error) {
     return { success: false, error: error.message };
   }
