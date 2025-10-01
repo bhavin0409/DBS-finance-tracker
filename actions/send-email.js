@@ -5,7 +5,7 @@ export async function sendEmail({to , subject , react}) {
 
     try {
         const data = await resend.emails.send({
-            from:"Welth <onboarding@resend.dev>",
+            from: "Welth <alerts@dbs-financetracker.netlify.app>",
             to: [`${to}`],
             subject,
             react
