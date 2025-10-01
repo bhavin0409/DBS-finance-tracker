@@ -19,7 +19,6 @@ const DashboardPage = async () => {
 
     if (defaultAccount) {
         budgetData = await getCurrentBudget(defaultAccount.id);
-        console.log(budgetData)
     }
 
     return (

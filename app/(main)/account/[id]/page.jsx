@@ -27,7 +27,10 @@ async function AccountContent({ accountId }) {
 
         <div className="text-right pb-2">
           <div className="text-xl sm:text-2xl font-bold">
-            ₹{parseFloat(account.balance).toFixed(2)}
+            {new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+            }).format(parseFloat(account.balance))}
           </div>
           <p className="text-sm text-muted-foreground">
             {account._count.transactions} Transactions
@@ -43,12 +46,10 @@ async function AccountContent({ accountId }) {
   );
 }
 
-export default function AccountPage({ params }) {
-  const { id } = params;
-
+export default async function AccountPage({ params }) {
   return (
     <Suspense fallback={<BarLoader width={"100%"} color="#9333ea" />}>
-      <AccountContent accountId={id} />
+      <AccountContent accountId={params.id} />
     </Suspense>
   );
 }

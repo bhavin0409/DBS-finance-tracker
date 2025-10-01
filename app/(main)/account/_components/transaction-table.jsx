@@ -384,8 +384,11 @@ export function TransactionTable({ transactions }) {
                         : "text-green-500"
                     )}
                   >
-                    {transaction.type === "EXPENSE" ? "-" : "+"}₹
-                    {transaction.amount.toFixed(2)}
+                    {transaction.type === "EXPENSE" ? "-" : "+"}
+                    {new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+            }).format(parseFloat(transaction.amount))}
                   </TableCell>
                   <TableCell>
                     {transaction.isRecurring ? (
