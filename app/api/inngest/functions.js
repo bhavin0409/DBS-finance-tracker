@@ -13,7 +13,7 @@ export const checkBudgetAlert = inngest.createFunction(
                 include: {
                     user: {
                         include: {
-                            accouts: {
+                            accounts: {
                                 where: {
                                     isDefault: true
                                 }
@@ -25,7 +25,7 @@ export const checkBudgetAlert = inngest.createFunction(
         })
 
         for (const budget of budgets) {
-            const defaultAccount = budget.user.accouts[0];
+            const defaultAccount = budget.user.accounts[0];
 
             if (!defaultAccount) {
                 continue;
