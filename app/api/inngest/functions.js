@@ -58,8 +58,8 @@ export const checkBudgetAlert = inngest.createFunction(
                 });
 
                 const totalExpenses = expenses._sum.amount?.toNumber() || 0;
-                const budgetAmount = budget.amount;
-                const percentageUsed = (totalExpenses / budgetAmount) * 100;
+                const budgetAmount = budget.amount.toNumber();
+                const percentageUsed = (totalExpenses / budgetAmount) * 100 || 0;
 
                 if (
                     percentageUsed >= 80 &&
