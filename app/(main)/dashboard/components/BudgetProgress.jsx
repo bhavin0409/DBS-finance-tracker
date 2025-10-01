@@ -15,6 +15,7 @@ const BudgetProgress = ({ initialBudget, currentExpenses }) => {
     const [newBudget, setNewBudget] = useState(initialBudget?.toString() || "");
 
     console.log( initialBudget, currentExpenses );
+    
     const {
         loading: isLoading,
         fn: updateBudgetFn,
