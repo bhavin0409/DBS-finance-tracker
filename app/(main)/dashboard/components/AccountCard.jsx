@@ -56,7 +56,10 @@ const AccountCard = ({ account }) => {
                     />
                 </CardHeader>
                 <CardContent>
-                    <p>₹{parseFloat(balance).toFixed(2)}</p>
+                    <p>{new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+            }).format(parseFloat(balance))}</p>
                     <p className='text-sm text-muted-foreground'>
                         {type.charAt(0) + type.slice(1).toLowerCase()} Account
                     </p>
