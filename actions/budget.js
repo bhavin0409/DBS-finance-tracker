@@ -11,10 +11,10 @@ export async function getCurrentBudget(accountId) {
         if (!userId) throw new Error("Unauthorized");
 
         const user = await db.user.findUnique({
-            where: { clerkUserId : userId }
+            where: { clerkUserId: userId }
         });
 
-        if(!user) throw new Error("User not found");
+        if (!user) throw new Error("User not found");
 
         const budget = await db.budget.findFirst({
             where: { userId: user.id },
@@ -47,12 +47,14 @@ export async function getCurrentBudget(accountId) {
             }
         });
 
+        console.log(expenses)
+
         return {
             budget: budget ? budget.amount.toNumber() : null,
             currentExpenses: expenses._sum.amount ? expenses._sum.amount.toNumber() : 0,
         }
     } catch (error) {
-        console.log("Error fetching budget: ",error.message);
+        console.log("Error fetching budget: ", error.message);
         return error.message;
     }
 }
@@ -60,11 +62,11 @@ export async function getCurrentBudget(accountId) {
 export async function updateBudget(amount) {
     try {
         const { userId } = await auth();
-        
-        if ( !userId ) throw new Error("Unauthorized");
+
+        if (!userId) throw new Error("Unauthorized");
 
         const user = await db.user.findUnique({
-            where: { clerkUserId : userId }
+            where: { clerkUserId: userId }
         });
 
         if (!user) {
@@ -72,8 +74,8 @@ export async function updateBudget(amount) {
         }
 
         const budget = await db.budget.upsert({
-            where: { 
-                userId : user.id
+            where: {
+                userId: user.id
             },
             update: {
                 amount: amount
@@ -86,15 +88,15 @@ export async function updateBudget(amount) {
 
         revalidatePath("/dashboard");
 
-        return { 
-            success: true, 
-            data: { ...budget, amount: budget.amount.toNumber() } 
+        return {
+            success: true,
+            data: { ...budget, amount: budget.amount.toNumber() }
         }
 
     } catch (error) {
         console.log('====================================');
-        console.log("Error updating budget: " , error.message);
+        console.log("Error updating budget: ", error.message);
         console.log('====================================');
-        return { success: false , data: error.message };
+        return { success: false, data: error.message };
     }
 }
