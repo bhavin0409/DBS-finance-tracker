@@ -6,7 +6,6 @@ import { notFound } from "next/navigation";
 
 async function AccountContent({ accountId }) {
   const accountData = await getAccountWithTransactions(accountId);
-
   if (!accountData) {
     notFound();
   }
