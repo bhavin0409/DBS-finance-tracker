@@ -1,0 +1,6 @@
+[[plugins]]
+package = "netlify-plugin-inngest"
+
+[plugins.inputs]
+    host = "https://dbs-financetracker.netlify.app/"
+    path = "/api/inngest"
