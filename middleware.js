@@ -24,7 +24,7 @@ export default clerkMiddleware(async (auth, req) => {
             }),
             detectBot({
                 mode: "LIVE",
-                allow: ["CATEGORY:SEARCH_ENGINE", "GO_HTTP"],
+                allow: ["CATEGORY:SEARCH_ENGINE", "GO_HTTP" ],
             }),
         ],
     });
