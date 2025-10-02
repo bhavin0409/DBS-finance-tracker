@@ -291,6 +291,10 @@ export const generateMonthlyReport = inngest.createFunction({
 async function generateFinancialInsights(stats, month) {
     const genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
     const model = genAi.getGenerativeModel({ model: "gemini-2.5-flash" })
+
+    // Ensure byCategory is always an object
+    const byCategory = stats.byCategory ?? {};
+
     const prompt = `
     Analyze this financial data and provide 3 concise, actionable insights.
     Focus on spending patterns and practical advice.
@@ -300,7 +304,7 @@ async function generateFinancialInsights(stats, month) {
     - Total Income: ${stats.totalIncome}
     - Total Expenses: ${stats.totalExpenses}
     - Net Income: ${stats.totalIncome - stats.totalExpenses}
-    - Expense Categories: ${Object.entries(stats.byCategory)
+    - Expense Categories: ${Object.entries(byCategory)
             .map(([category, amount]) => `${category}: ${amount}`)
             .join(", ")}
 

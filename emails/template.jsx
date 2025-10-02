@@ -69,16 +69,16 @@ export default function EmailTemplate({
                         <Section style={styles.statsContainer}>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Total Income</Text>
-                                <Text style={styles.heading}>${data?.stats.totalIncome}</Text>
+                                <Text style={styles.heading}>{data?.stats.totalIncome.toFixed(2)}</Text>
                             </div>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Total Expenses</Text>
-                                <Text style={styles.heading}>${data?.stats.totalExpenses}</Text>
+                                <Text style={styles.heading}>{data?.stats.totalExpenses.toFixed(2)}</Text>
                             </div>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Net</Text>
                                 <Text style={styles.heading}>
-                                    ${data?.stats.totalIncome - data?.stats.totalExpenses}
+                                    {data?.stats.totalIncome - data?.stats.totalExpenses.toFixed(2)}
                                 </Text>
                             </div>
                         </Section>
@@ -91,7 +91,7 @@ export default function EmailTemplate({
                                     ([category, amount]) => (
                                         <div key={category} style={styles.row}>
                                             <Text style={styles.text}>{category}</Text>
-                                            <Text style={styles.text}>${amount}</Text>
+                                            <Text style={styles.text}>{amount.toFixed(2)}</Text>
                                         </div>
                                     )
                                 )}
@@ -136,16 +136,16 @@ export default function EmailTemplate({
                         <Section style={styles.statsContainer}>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Budget Amount</Text>
-                                <Text style={styles.heading}>${data?.budgetAmount}</Text>
+                                <Text style={styles.heading}>${data?.budgetAmount.toFixed(2)}</Text>
                             </div>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Spent So Far</Text>
-                                <Text style={styles.heading}>${data?.totalExpenses}</Text>
+                                <Text style={styles.heading}>${data?.totalExpenses.toFixed(2)}</Text>
                             </div>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Remaining</Text>
                                 <Text style={styles.heading}>
-                                    ${data?.budgetAmount - data?.totalExpenses}
+                                    ${data?.budgetAmount - data?.totalExpenses.toFixed(2)}
                                 </Text>
                             </div>
                         </Section>
