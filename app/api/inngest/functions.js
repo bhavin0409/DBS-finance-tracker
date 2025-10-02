@@ -13,7 +13,7 @@ export const checkBudgetAlert = inngest.createFunction(
                 include: {
                     user: {
                         include: {
-                            accounts: {
+                            accouts: {
                                 where: {
                                     isDefault: true
                                 }
@@ -25,7 +25,7 @@ export const checkBudgetAlert = inngest.createFunction(
         })
 
         for (const budget of budgets) {
-            const defaultAccount = budget.user.accounts[0];
+            const defaultAccount = budget.user.accouts[0];
 
             if (!defaultAccount) {
                 continue;
@@ -58,7 +58,9 @@ export const checkBudgetAlert = inngest.createFunction(
                 });
 
                 const totalExpenses = expenses._sum.amount?.toNumber() || 0;
-                const budgetAmount = budget.amount.toNumber();
+                const budgetAmount = typeof budget.amount === "number"
+                    ? budget.amount
+                    : Number(budget.amount?.toString?.() ?? budget.amount);
                 const percentageUsed = (totalExpenses / budgetAmount) * 100 || 0;
 
                 if (
@@ -116,12 +118,12 @@ export const processRecurringTransation = inngest.createFunction(
         // validate event data
         if (!event?.data?.transactionId || !event?.data?.userId) {
             console.log("Invalid event data", event.data);
-            return { error: "Missing recurring event data "}
+            return { error: "Missing recurring event data " }
         }
 
-        await step.run("process-transaction" , async () => {
+        await step.run("process-transaction", async () => {
             const transaction = await db.transaction.findUnique({
-                where: { 
+                where: {
                     id: event.data.transactionId,
                     userId: event.data.userId
                 },
@@ -150,20 +152,20 @@ export const processRecurringTransation = inngest.createFunction(
                 const changeBalance = transaction.type === "EXPENSE" ? -transaction.amount.toNumber() : transaction.amount.toNumber();
 
                 await tx.account.update({
-                    where: { id : transaction.accountId },
-                    data: { balance : { increment : changeBalance } },
+                    where: { id: transaction.accountId },
+                    data: { balance: { increment: changeBalance } },
                 })
 
                 //update last processed date and nextRecurringDate
                 await tx.transaction.update({
                     where: { id: transaction.id },
                     data: {
-                        lastProcessed : new Date(),
-                        nextRecurringDate: calculateNextRecurringDate( 
+                        lastProcessed: new Date(),
+                        nextRecurringDate: calculateNextRecurringDate(
                             new Date(),
                             transaction.recurringInterval
                         ),
-                    }, 
+                    },
                 })
             })
         })
@@ -204,9 +206,9 @@ export const triggerRecurringTransation = inngest.createFunction(
                     }
                 })
             );
-            
+
             //3. send events to be processed
-            await inngest.send(events)
+            await step.sendEvent("send-recurring-tx-events", events);
         }
 
         return { triggered: recurringTransations.length };
