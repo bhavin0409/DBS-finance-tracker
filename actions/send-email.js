@@ -1,21 +1,29 @@
-import { Resend } from "resend";
+import { MailerSend, EmailParams, Recipient } from 'mailersend';
 
-export async function sendEmail({to , subject , react}) {
-    const resend = new Resend(process.env.RESEND_API_KEY);
+const mailerSend = new MailerSend({
+    apiKey: process.env.MAILERSEND_API_KEY,
+});
 
+export async function sendEmail({ to, subject, react }) {
     try {
-        const data = await resend.emails.send({
-            from: "Welth <alerts@dbs-financetracker.netlify.app>",
-            to: [`${to}`],
-            subject,
-            react
-        })
+        // Convert react (JSX/ReactNode) to HTML string if needed
+        const html =
+            typeof react === "string"
+                ? react
+                : (typeof window === "undefined" && require("react-dom/server").renderToStaticMarkup(react)) || "";
 
-        return {success:true , data}
+        const emailParams = new EmailParams()
+            .setFrom(process.env.NEXT_PUBLIC_EMAIL_FROM, 'Welth')
+            .setTo([new Recipient(to)])
+            .setSubject(subject || 'No Subject')
+            .setHtml(html);
+
+        const response = await mailerSend.email.send(emailParams);
+        return { success: true, data: response };
     } catch (error) {
         console.log('====================================');
-        console.log("Failed to send Email: " , error.message);
+        console.log("Failed to send Email: ", error.message);
         console.log('====================================');
-        return {success:false , error}
+        return { success: false, error };
     }
 }
