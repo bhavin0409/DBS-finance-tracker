@@ -2,6 +2,7 @@ import { sendEmail } from "@/actions/send-email";
 import EmailTemplate from "@/emails/template";
 import { inngest } from "@/lib/inngest/client";
 import { db } from "@/lib/prisma";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 
 export const checkBudgetAlert = inngest.createFunction(
@@ -243,3 +244,123 @@ const calculateNextRecurringDate = (startDate, interval) => {
     }
     return date;
 };
+
+export const generateMonthlyReport = inngest.createFunction({
+    id: "generate-monthly-report",
+    name: "Generate Monthly Report",
+},
+    { cron: "0 0 1 * *" },
+    async ({ step }) => {
+        const users = await step.run("fetch-users", async () => {
+            return await db.user.findMany({
+                include: {
+                    accouts: true,
+                }
+            });
+        });
+
+        for (const user of users) {
+            await step.run(`generate-report-${user.id}`, async () => {
+                const lastMonth = new Date();
+                lastMonth.setMonth(lastMonth.getMonth() - 1);
+
+                const stats = await getMonthlyStats(user.id, lastMonth);
+                const monthName = lastMonth.toLocaleString("default", { month: "long", year: "numeric" });
+
+                const insights = await generateFinancialInsights(user.id);
+
+                await sendEmail({
+                    to: user.email,
+                    subject: `Your Monthly Financial Report - ${monthName}`,
+                    react: EmailTemplate({
+                        userName: user.name,
+                        type: "monthly-report",
+                        data: {
+                            stats,
+                            month: monthName,
+                            insights
+                        }
+                    })
+                })
+            })
+        }
+        return { processed: users.length }
+    }
+)
+
+async function generateFinancialInsights(stats, month) {
+    const genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+    const model = genAi.getGenerativeModel({ model: "gemini-2.5-flash" })
+    const prompt = `
+    Analyze this financial data and provide 3 concise, actionable insights.
+    Focus on spending patterns and practical advice.
+    Keep it friendly and conversational.
+
+    Financial Data for ${month}:
+    - Total Income: ${stats.totalIncome}
+    - Total Expenses: ${stats.totalExpenses}
+    - Net Income: ${stats.totalIncome - stats.totalExpenses}
+    - Expense Categories: ${Object.entries(stats.byCategory)
+            .map(([category, amount]) => `${category}: ${amount}`)
+            .join(", ")}
+
+    Format the response as a JSON array of strings, like this:
+    ["insight 1", "insight 2", "insight 3"]
+    `;
+
+    try {
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        const cleanText = text
+            .replace(/```(?:json)?/gi, "")
+            .replace(/```/g, "")
+            .trim();
+
+        return JSON.parse(cleanText);
+    } catch (error) {
+        console.error("Error generating insights:", error);
+        return [
+            "Your highest expense category this month might need attention.",
+            "Consider setting up a budget for better financial management.",
+            "Track your recurring expenses to identify potential savings.",
+        ];
+    }
+
+}
+
+const getMonthlyStats = async (userId, lastMonth) => {
+    const startDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
+    const endDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0);
+
+    const transactions = await db.transaction.findMany({
+        where: {
+            userId,
+            date: {
+                gte: startDate,
+                lte: endDate
+            }
+        }
+    });
+
+    return transactions.reduce(
+        (stats, t) => {
+            const amount = t.amount.toNumber();
+            if (t.type === "EXPENSE") {
+                stats.totalExpenses += amount;
+                stats.byCategory[t.category] = (
+                    stats.byCategory[t.category] || 0
+                ) + amount;
+            } else {
+                stats.totalIncome += amount;
+            }
+            return stats;
+        },
+        {
+            totalIncome: 0,
+            totalExpenses: 0,
+            byCategory: {},
+            transactionsCount: transactions.length,
+        }
+    )
+}

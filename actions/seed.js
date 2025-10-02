@@ -3,8 +3,8 @@
 import { db } from "@/lib/prisma";
 import { subDays } from "date-fns";
 
-const ACCOUNT_ID = "c14362d6-1ca5-48df-8d4b-f3de2ca33b09";
-const USER_ID = "e8490a76-3691-456b-b11e-b9466e98b76d";
+const ACCOUNT_ID = "69057e22-b2dd-44ed-8118-2997bcb476fa";
+const USER_ID = "274357c4-50b1-4c1c-9c78-7ea3ae7575aa";
 
 // Categories with their typical amount ranges
 const CATEGORIES = {
@@ -43,7 +43,7 @@ function getRandomCategory(type) {
 
 export async function seedTransactions() {
   try {
-    // Generate 90 days of transactions
+    // Generate 60 days of transactions
     const transactions = [];
     let totalBalance = 0;
 
