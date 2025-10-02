@@ -40,7 +40,7 @@ async function AccountContent({ accountId }) {
 
       {/* Chart Section */}
       <Suspense fallback={<BarLoader width={"100%"} color="#9333ea" />}>
-      <AccountChart transactions={transactions}/>
+        <AccountChart transactions={transactions}/>
       </Suspense>
 
       {/* Transactions Table */}
@@ -50,9 +50,11 @@ async function AccountContent({ accountId }) {
 }
 
 export default async function AccountPage({ params }) {
+  const { id } = await params; // Await params here to access id safely
+
   return (
     <Suspense fallback={<BarLoader width={"100%"} color="#9333ea" />}>
-      <AccountContent accountId={params.id} />
+      <AccountContent accountId={id} />
     </Suspense>
   );
 }
