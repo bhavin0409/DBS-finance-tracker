@@ -283,8 +283,8 @@ export function TransactionTable({ transactions }) {
       </div>
 
       {/* Transactions Table */}
-      <div className="rounded-md border">
-        <Table>
+      <div className="rounded-md border ">
+        <Table className=" p-10">
           <TableHeader>
             <TableRow>
               <TableHead className="w-[50px]">
@@ -465,7 +465,7 @@ export function TransactionTable({ transactions }) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 mt-5 mb-20">
           <Button
             variant="outline"
             size="icon"
@@ -490,3 +490,4 @@ export function TransactionTable({ transactions }) {
     </div>
   );
 }
+  
