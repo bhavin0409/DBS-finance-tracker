@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <head>
-          <link rel="icon" href="/public/logosm.png" sizes="any" />
+          <link rel="icon" href="/logosm.png" sizes="any" />
         </head>
         <body className={`${inter.className} highlighter-context`}
         cz-shortcut-listen="true"
