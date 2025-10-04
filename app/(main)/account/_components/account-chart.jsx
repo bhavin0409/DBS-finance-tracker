@@ -95,7 +95,7 @@ export function AccountChart({ transactions }) {
         </Select>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-around mb-6 text-sm">
+        <div className="grid grid-cols-2 lg:grid-cols-3 items-center justify-center gap-4 mb-6 text-sm">
           <div className="text-center">
             <p className="text-muted-foreground">Total Income</p>
             <p className="text-lg font-bold text-green-500">
