@@ -178,7 +178,7 @@ export const triggerRecurringTransation = inngest.createFunction(
         id: "trigger-recurring-transaction",
         name: "Trigger Recurring Transaction"
     },
-    { cron: "0 0 * * *" },
+    { cron: '0 * * * *' },
     async ({ step }) => {
         //1. Fetch all due recurring transations
         const recurringTransations = await step.run(
@@ -267,7 +267,7 @@ export const generateMonthlyReport = inngest.createFunction({
                 const stats = await getMonthlyStats(user.id, lastMonth);
                 const monthName = lastMonth.toLocaleString("default", { month: "long", year: "numeric" });
 
-                const insights = await generateFinancialInsights(user.id);
+                const insights = await generateFinancialInsights(stats , monthName);
 
                 await sendEmail({
                     to: user.email,
@@ -282,6 +282,7 @@ export const generateMonthlyReport = inngest.createFunction({
                         }
                     })
                 })
+                return {insights , stats}
             })
         }
         return { processed: users.length }
@@ -336,7 +337,6 @@ async function generateFinancialInsights(stats, month) {
 const getMonthlyStats = async (userId, lastMonth) => {
     const startDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
     const endDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0);
-
     const transactions = await db.transaction.findMany({
         where: {
             userId,
@@ -358,6 +358,7 @@ const getMonthlyStats = async (userId, lastMonth) => {
             } else {
                 stats.totalIncome += amount;
             }
+
             return stats;
         },
         {

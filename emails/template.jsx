@@ -48,8 +48,12 @@ const PREVIEW_DATA = {
 
 export default function EmailTemplate({
     userName = "",
-    type = "monthly-report",
-    data = {},
+    type = "budget-alert",
+    data = {
+            percentageUsed: 85,
+            budgetAmount: 4000,
+            totalExpenses: 3400,
+        },
 }) {
     if (type === "monthly-report") {
         return (
@@ -69,16 +73,16 @@ export default function EmailTemplate({
                         <Section style={styles.statsContainer}>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Total Income</Text>
-                                <Text style={styles.heading}>{data?.stats.totalIncome.toFixed(2)}</Text>
+                                <Text style={styles.heading}>{data?.stats.totalIncome}</Text>
                             </div>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Total Expenses</Text>
-                                <Text style={styles.heading}>{data?.stats.totalExpenses.toFixed(2)}</Text>
+                                <Text style={styles.heading}>{data?.stats.totalExpenses}</Text>
                             </div>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Net</Text>
                                 <Text style={styles.heading}>
-                                    {data?.stats.totalIncome - data?.stats.totalExpenses.toFixed(2)}
+                                    {data?.stats.totalIncome - data?.stats.totalExpenses}
                                 </Text>
                             </div>
                         </Section>
@@ -90,8 +94,8 @@ export default function EmailTemplate({
                                 {Object.entries(data?.stats.byCategory).map(
                                     ([category, amount]) => (
                                         <div key={category} style={styles.row}>
-                                            <Text style={styles.text}>{category}</Text>
-                                            <Text style={styles.text}>{amount.toFixed(2)}</Text>
+                                            <Text style={styles.text}>{category} :- </Text>
+                                            <Text style={styles.text}> {amount}</Text>
                                         </div>
                                     )
                                 )}
@@ -136,16 +140,16 @@ export default function EmailTemplate({
                         <Section style={styles.statsContainer}>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Budget Amount</Text>
-                                <Text style={styles.heading}>${data?.budgetAmount.toFixed(2)}</Text>
+                                <Text style={styles.heading}>{data?.budgetAmount}</Text>
                             </div>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Spent So Far</Text>
-                                <Text style={styles.heading}>${data?.totalExpenses.toFixed(2)}</Text>
+                                <Text style={styles.heading}>{data?.totalExpenses}</Text>
                             </div>
                             <div style={styles.stat}>
                                 <Text style={styles.text}>Remaining</Text>
                                 <Text style={styles.heading}>
-                                    ${data?.budgetAmount - data?.totalExpenses.toFixed(2)}
+                                    {data?.budgetAmount - data?.totalExpenses}
                                 </Text>
                             </div>
                         </Section>
