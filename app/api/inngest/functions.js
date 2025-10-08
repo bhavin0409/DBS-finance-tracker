@@ -65,7 +65,7 @@ export const checkBudgetAlert = inngest.createFunction(
                 const percentageUsed = (totalExpenses / budgetAmount) * 100 || 0;
 
                 if (
-                    percentageUsed >= 80 &&
+                    percentageUsed >= 75 &&
                     (!budget.lastAlertSent ||
                         isNewMonth(new Date(budget.lastAlertSent), new Date())
                     )
@@ -297,7 +297,7 @@ async function generateFinancialInsights(stats, month) {
     const byCategory = stats.byCategory ?? {};
 
     const prompt = `
-    Analyze this financial data and provide 3 concise, actionable insights.
+    Analyze this financial data and provide 3 concise, actionable insights .
     Focus on spending patterns and practical advice.
     Keep it friendly and conversational.
 
@@ -308,7 +308,7 @@ async function generateFinancialInsights(stats, month) {
     - Expense Categories: ${Object.entries(byCategory)
             .map(([category, amount]) => `${category}: ${amount}`)
             .join(", ")}
-
+    above data i provided it is in Indian Rupees (INR).
     Format the response as a JSON array of strings, like this:
     ["insight 1", "insight 2", "insight 3"]
     `;
