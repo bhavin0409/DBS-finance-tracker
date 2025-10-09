@@ -13,8 +13,6 @@ import { toast } from 'sonner';
 const BudgetProgress = ({ initialBudget, currentExpenses }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newBudget, setNewBudget] = useState(initialBudget?.toString() || "");
-
-    console.log( initialBudget, currentExpenses );
     
     const {
         loading: isLoading,

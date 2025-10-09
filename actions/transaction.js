@@ -63,9 +63,6 @@ export async function createTransaction(data) {
             throw new Error("Account not found");
         }
 
-        console.log('====================================');
-        console.log(data.type , data.amount);
-        console.log('====================================');
         const balanceChange = data.type === "EXPENSE" ? -data.amount : data.amount;
         const newBalance = account.balance.toNumber() + balanceChange;
 
