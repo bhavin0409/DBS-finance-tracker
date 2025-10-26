@@ -64,7 +64,7 @@ const ReceiptScanner = ({ onScanComplete }) => {
                 ):(
                     <>
                         <Camera className='mr-2'/>
-                        <span>Scan Receipt With AI</span>
+                        <span>Smart Receipt Scanning</span>
                     </>
                 )}
             </Button>
